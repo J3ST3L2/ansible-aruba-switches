@@ -40,6 +40,8 @@
         commands:
           - "copy scp://{{ image_server_user }}@{{ image_server_host }}{{ image_server_base_path }}/{{ image_file }} secondary vrf default"
       register: copy_result
+      vars:
+        ansible_command_timeout: 1800
 
     - name: Show copy result
       ansible.builtin.debug:
