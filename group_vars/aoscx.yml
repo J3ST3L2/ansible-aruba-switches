@@ -3,5 +3,7 @@ backup_dir: "/tmp/aruba-upgrades/backups"
 image_server_user: tberno
 image_server_host: 10.20.60.19
 image_server_base_path: /opt/ansible/aruba-upgrades/files
+# Added the missing image filename
+image_file: "ArubaOS-CX_6100-6000_10_13_1161.swi"
 
 backup_timestamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
