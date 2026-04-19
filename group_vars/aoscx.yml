@@ -1,6 +1,5 @@
 ---
-backup_dir: /opt/ansible/aruba-upgrades/backups
-
+backup_dir: "/tmp/aruba-upgrades/backups"
 image_server_user: tberno
 image_server_host: 10.20.60.19
 image_server_base_path: /opt/ansible/aruba-upgrades/files
