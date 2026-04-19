@@ -1,0 +1,15 @@
+---
+- name: Show Aruba switch versions
+  hosts: aoscx
+  gather_facts: no
+
+  tasks:
+    - name: Show version
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - show version
+      register: version_out
+
+    - name: Print version output
+      ansible.builtin.debug:
+        var: version_out.stdout_lines

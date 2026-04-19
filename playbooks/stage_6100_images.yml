@@ -1,0 +1,27 @@
+---
+- name: Stage Aruba 6100 images
+  hosts:
+    - garage-ac
+    - office-acc
+  gather_facts: no
+
+  tasks:
+    - name: Copy 6100 image to secondary
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - "copy scp://{{ image_server_user }}@{{ image_server_host }}{{ image_server_base_path }}/{{ image_file }} secondary vrf default"
+      register: copy_result
+
+    - name: Show copy result
+      ansible.builtin.debug:
+        var: copy_result.stdout_lines
+
+    - name: Show images
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - show images
+      register: images_out
+
+    - name: Print images
+      ansible.builtin.debug:
+        var: images_out.stdout_lines

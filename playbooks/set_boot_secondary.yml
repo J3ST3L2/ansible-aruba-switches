@@ -1,0 +1,15 @@
+---
+- name: Set switches to boot secondary image
+  hosts: aoscx
+  gather_facts: no
+
+  tasks:
+    - name: Set boot image to secondary
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - boot system secondary
+
+    - name: Save config
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - write memory

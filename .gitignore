@@ -1,0 +1,5 @@
+.venv/
+backups/
+files/
+*.retry
+*.log

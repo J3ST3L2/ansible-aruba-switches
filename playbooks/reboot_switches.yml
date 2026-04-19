@@ -1,0 +1,10 @@
+---
+- name: Reboot Aruba switches
+  hosts: aoscx
+  gather_facts: no
+
+  tasks:
+    - name: Reload switches
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - reload

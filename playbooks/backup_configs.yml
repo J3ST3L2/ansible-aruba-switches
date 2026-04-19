@@ -1,0 +1,36 @@
+---
+- name: Save switch config and back up to Ansible server
+  hosts: aoscx
+  gather_facts: no
+
+  tasks:
+    - name: Save running-config to startup-config on switch
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - write memory
+
+    - name: Collect running config
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - show running-config
+      register: running_config
+
+    - name: Collect version
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - show version
+      register: version_output
+
+    - name: Save running config to Ansible server
+      delegate_to: localhost
+      ansible.builtin.copy:
+        content: "{{ running_config.stdout[0] }}"
+        dest: "{{ backup_dir }}/{{ inventory_hostname }}-running-config-{{ backup_timestamp }}.txt"
+        mode: "0644"
+
+    - name: Save version output to Ansible server
+      delegate_to: localhost
+      ansible.builtin.copy:
+        content: "{{ version_output.stdout[0] }}"
+        dest: "{{ backup_dir }}/{{ inventory_hostname }}-show-version-{{ backup_timestamp }}.txt"
+        mode: "0644"
