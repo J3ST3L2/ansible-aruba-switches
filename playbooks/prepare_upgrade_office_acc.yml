@@ -21,6 +21,14 @@
           - show version
       register: version_output
 
+    - name: Ensure backup directory exists locally
+      delegate_to: localhost
+      run_once: true
+      ansible.builtin.file:
+        path: "{{ backup_dir }}"
+        state: directory
+        mode: "0755"
+
     - name: Save running config to Ansible server
       delegate_to: localhost
       ansible.builtin.copy:
