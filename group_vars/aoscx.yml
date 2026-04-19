@@ -4,3 +4,4 @@ image_server_user: tberno
 image_server_host: 10.20.60.19
 image_server_base_path: /opt/ansible/aruba-upgrades/files
 backup_timestamp: "{{ lookup('pipe', 'date +%Y%m%d-%H%M%S') }}"
+ansible_network_cli_ssh_type: libssh
