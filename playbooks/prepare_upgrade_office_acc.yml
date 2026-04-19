@@ -43,24 +43,24 @@
         dest: "{{ backup_dir }}/{{ inventory_hostname }}-show-version-{{ backup_timestamp }}.txt"
         mode: "0644"
 
-    - name: Copy image to secondary
-      arubanetworks.aoscx.aoscx_command:
-        commands:
-          - command: "copy scp://{{ image_server_user }}@{{ image_server_host }}//opt/ansible/aruba-upgrades/files/{{ image_file }} secondary vrf default"
-            check_all: true
-            prompt:
-              - '.*\(y/n\)\?.*'
-              - '.*password:.*'
-            answer:
-              - 'y'
-              - 'Dirtymax1#' 
-      vars:
-        ansible_command_timeout: 1800
+    #- name: Copy image to secondary
+     # arubanetworks.aoscx.aoscx_command:
+       # commands:
+          #- command: "copy scp://{{ image_server_user }}@{{ image_server_host }}//opt/ansible/aruba-upgrades/files/{{ image_file }} secondary vrf default"
+          #  check_all: true
+         #   prompt:
+        #      - '.*\(y/n\)\?.*'
+       #       - '.*password:.*'
+      #      answer:
+     #         - 'y'
+    #          - 'Dirtymax1#'
+   #   vars:
+  #      ansible_command_timeout: 1800
 
 
-    - name: Show copy result
-      ansible.builtin.debug:
-        var: copy_result.stdout_lines
+#    - name: Show copy result
+ #     ansible.builtin.debug:
+  #      var: copy_result.stdout_lines
 
     - name: Verify images
       arubanetworks.aoscx.aoscx_command:
