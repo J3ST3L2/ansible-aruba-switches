@@ -1,0 +1,10 @@
+---
+- name: Reboot garage-ac
+  hosts: garage-ac
+  gather_facts: no
+
+  tasks:
+    - name: Reload switch
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - reload

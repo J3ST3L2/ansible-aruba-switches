@@ -1,0 +1,15 @@
+---
+- name: Show images on office-acc
+  hosts: office-acc
+  gather_facts: no
+
+  tasks:
+    - name: Show images
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - show images
+      register: image_out
+
+    - name: Print images output
+      ansible.builtin.debug:
+        var: image_out.stdout_lines

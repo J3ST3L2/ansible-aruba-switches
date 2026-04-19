@@ -1,0 +1,10 @@
+---
+- name: Reboot furnace-core
+  hosts: furnace-core
+  gather_facts: no
+
+  tasks:
+    - name: Reload switch
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - reload

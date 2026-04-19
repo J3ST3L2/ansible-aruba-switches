@@ -1,0 +1,66 @@
+---
+- name: Prepare upgrade for furnace-core
+  hosts: furnace-core
+  gather_facts: no
+
+  tasks:
+    - name: Save running-config to startup-config on switch
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - write memory
+
+    - name: Collect running config
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - show running-config
+      register: running_config
+
+    - name: Collect version
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - show version
+      register: version_output
+
+    - name: Save running config to Ansible server
+      delegate_to: localhost
+      ansible.builtin.copy:
+        content: "{{ running_config.stdout[0] }}"
+        dest: "{{ backup_dir }}/{{ inventory_hostname }}-running-config-{{ backup_timestamp }}.txt"
+        mode: "0644"
+
+    - name: Save version output to Ansible server
+      delegate_to: localhost
+      ansible.builtin.copy:
+        content: "{{ version_output.stdout[0] }}"
+        dest: "{{ backup_dir }}/{{ inventory_hostname }}-show-version-{{ backup_timestamp }}.txt"
+        mode: "0644"
+
+    - name: Copy image to secondary
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - "copy scp://{{ image_server_user }}@{{ image_server_host }}{{ image_server_base_path }}/{{ image_file }} secondary vrf default"
+      register: copy_result
+
+    - name: Show copy result
+      ansible.builtin.debug:
+        var: copy_result.stdout_lines
+
+    - name: Verify images
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - show images
+      register: images_out
+
+    - name: Print image state
+      ansible.builtin.debug:
+        var: images_out.stdout_lines
+
+    - name: Set boot image to secondary
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - boot system secondary
+
+    - name: Save config after boot change
+      arubanetworks.aoscx.aoscx_command:
+        commands:
+          - write memory
