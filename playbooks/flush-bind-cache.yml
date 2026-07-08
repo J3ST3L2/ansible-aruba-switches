@@ -23,6 +23,7 @@
         echo "ERROR: docker not found"
         exit 1
       changed_when: false
+      check_mode: false
 
     - name: Confirm BIND container is running
       ansible.builtin.raw: |
@@ -35,15 +36,16 @@
 
         CONTAINER="{{ bind_container }}"
 
-        if ! "$DOCKER" ps --format '{% raw %}{{.Names}}{% endraw %}' | grep -Fxq "$CONTAINER"; then
+        if ! "$DOCKER" ps --format '{{.Names}}' | grep -Fxq "$CONTAINER"; then
           echo "ERROR: container $CONTAINER is not running"
           echo "Running containers:"
-          "$DOCKER" ps --format '{% raw %}{{.Names}}  {{.Image}}  {{.Status}}{% endraw %}'
+          "$DOCKER" ps --format '{{.Names}}  {{.Image}}  {{.Status}}'
           exit 1
         fi
 
         echo "OK: $CONTAINER is running"
       changed_when: false
+      check_mode: false
 
     - name: Flush BIND cache inside container
       ansible.builtin.raw: |
@@ -71,7 +73,8 @@
         '
       register: flush_result
       changed_when: "'OK: BIND cache flushed inside container' in flush_result.stdout"
+      check_mode: false
 
     - name: Show flush output
       ansible.builtin.debug:
-        msg: "{{ inventory_hostname }} / {{ bind_container }}: {{ flush_result.stdout_lines }}"
+        msg: "{{ inventory_hostname }} / {{ bind_container }}: {{ flush_result.stdout_lines | default(['No flush output captured']) }}"
